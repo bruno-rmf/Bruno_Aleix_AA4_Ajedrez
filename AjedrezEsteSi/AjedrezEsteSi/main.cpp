@@ -6,6 +6,7 @@ char tablero[ALTO][ANCHO];
 bool gameOver = false;
 
 
+//inicializar el tablero cuando empieza la partida
 void inicializarTablero() {
     
     tablero[0][0] = 't';
@@ -43,7 +44,7 @@ void inicializarTablero() {
     tablero[7][7] = 'T';
 }
 
-
+//imprimir el tablero
 void imprimirTablero() {
     std::cout << "  1 2 3 4 5 6 7 8\n";
 
@@ -75,11 +76,17 @@ void imprimirTablero() {
     std::cout << "\n";
 }
 
+//movimientos de cada pieza
+void movimientoPieza() {
+
+}
+
 int main() {
     inicializarTablero();
     while (!gameOver)
     {
         imprimirTablero();
+        //añadir framerate
         system("cls");
     }
 
