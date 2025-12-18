@@ -4,11 +4,16 @@
 
 char tablero[ALTO][ANCHO];
 bool gameOver = false;
+bool turno = false;
 
+//BLANCOS SON MAYUS negros son minusculas
+
+//falta acabar movimiento de peon
 
 //inicializar el tablero cuando empieza la partida
 void inicializarTablero() {
     
+    //piezas negras
     tablero[0][0] = 't';
     tablero[0][1] = 'h';
     tablero[0][2] = 'b';
@@ -33,7 +38,8 @@ void inicializarTablero() {
     for (int i = 0; i < ANCHO; i++) {
         tablero[6][i] = 'P';
     }
-        
+    
+    //piezas blancas
     tablero[7][0] = 'T';
     tablero[7][1] = 'H';
     tablero[7][2] = 'B';
@@ -77,8 +83,124 @@ void imprimirTablero() {
 }
 
 //movimientos de cada pieza
-void movimientoPieza() {
+void movimientoPieza(char pieza, int columna, int fila) {
+    switch (pieza)
+    {
+        //movimiento de peon negro
+    case 'p':
+        
+        if (fila + 1 < ALTO && tablero[fila + 1][columna] == '*') {
+            //si es el primer movimiento
+            if (fila == 1)
+            {
+                int opcion;
+                std::cout << "Quieres mover una casilla o dos? ";
+                std::cin >> opcion;
+                //mover una posicion
+                if (opcion == 1)
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[fila + 1][columna] = 'p';
+                }
+                //mover dos posiciones
+                else if (opcion == 2)
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[fila + 2][columna] = 'p';
+                }
+            }
+            else
+            {
+                tablero[fila][columna] = '*';
+                tablero[fila + 1][columna] = 'p';
+            }
+        }
+        //sistema de diagonal para matar (falta)
+        else if(fila + 1 < ALTO && tablero[fila + 1][columna + 1] >= 'A' && fila + 1 < ALTO && tablero[fila + 1][columna + 1] <= 'Z')
+        {
 
+        }
+        break;
+
+        //movimeitno peon blanco
+    case 'P':
+        //mira si la de delante no hay nadie que se mueva
+        if (fila - 1 < ALTO && tablero[fila - 1][columna] == '*') {
+            //si es el primer movimiento
+            if (fila == 6)
+            {
+                int opcion;
+                std::cout << "Quieres mover una casilla o dos? ";
+                std::cin >> opcion;
+                //mover una posicion
+                if (opcion == 1)
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[fila - 1][columna] = 'P';
+                }
+                //mover dos posiciones
+                else if (opcion == 2)
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[fila - 2][columna] = 'P';
+                }
+            }
+            else
+            {
+                tablero[fila][columna] = '*';
+                tablero[fila - 1][columna] = 'P';
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+//turnos del juego si es false es jugador 1
+void turnoJugador() {
+    int columna, fila;
+    char pieza;
+
+    std::cout << "Dime la columna que esta la pieza: ";
+    std::cin >> columna;
+    std::cout << "Dime la fila en la que esta la pieza: ";
+    std::cin >> fila;
+    
+    //restar 1 para que este de acorde con el array
+    columna--;
+    fila = ALTO - fila;
+
+    //Turno Jugador 1
+    if (!turno)
+    {
+        pieza = tablero[fila][columna];
+        //comprueba si la ficha es suya sino vuelve a tirar
+        if (pieza >= 'A' && pieza <= 'Z') {
+            movimientoPieza(pieza, columna, fila);
+            turno = true;
+        }
+        else {
+            std::cout << "No es tu pieza. Vuelve a tirar.";
+            turnoJugador();
+        }
+
+    }
+    //turno jugador 2
+    else {
+        pieza = tablero[fila][columna];
+        //comprueba si la ficha es suya sino vuelve a tirar
+        if (pieza >= 'a' && pieza <= 'z') {
+            movimientoPieza(pieza, columna, fila);
+            turno = false;
+        }
+        else {
+            std::cout << "No es tu pieza. Vuelve a tirar.";
+            turnoJugador();
+        }
+    }
+    
 }
 
 int main() {
@@ -86,6 +208,8 @@ int main() {
     while (!gameOver)
     {
         imprimirTablero();
+        turnoJugador();
+        
         //añadir framerate
         system("cls");
     }
