@@ -9,6 +9,7 @@ bool turno = false;
 //BLANCOS SON MAYUS negros son minusculas
 
 //falta acabar movimiento de peon
+//USA: (pieza >= 'a' && pieza <= 'z') para ver si es negra y con MAYS lo mismo
 
 //inicializar el tablero cuando empieza la partida
 void inicializarTablero() {
@@ -84,6 +85,8 @@ void imprimirTablero() {
 
 //movimientos de cada pieza
 void movimientoPieza(char pieza, int columna, int fila) {
+    //un case para cada tipo de pieza separar MAYS y min
+    //cada pieza a de tener matar, movimiento y limites
     switch (pieza)
     {
         //movimiento de peon negro
