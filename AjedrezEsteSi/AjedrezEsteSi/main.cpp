@@ -3,17 +3,20 @@
 #define ALTO 8
 
 char tablero[ALTO][ANCHO];
-bool gameOver = false;
-bool turno = false;
-
+bool reybMuerto = false;
+bool reynMuerto = false;
+int turno = 1;
+int casillaMovimiento;
+char pieza;
+int fila;
+int columna;
+bool seleccion = false;
+char posicionDispo[ALTO][ANCHO];
 //BLANCOS SON MAYUS negros son minusculas
-
-//falta acabar movimiento de peon
-//USA: (pieza >= 'a' && pieza <= 'z') para ver si es negra y con MAYS lo mismo
 
 //inicializar el tablero cuando empieza la partida
 void inicializarTablero() {
-    
+
     //piezas negras
     tablero[0][0] = 't';
     tablero[0][1] = 'h';
@@ -28,18 +31,18 @@ void inicializarTablero() {
         tablero[1][i] = 'p';
     }
 
-    for (int i = 2; i < 6; i++) 
+    for (int i = 2; i < 6; i++)
     {
-        for (int j = 0; j < ANCHO; j++) 
+        for (int j = 0; j < ANCHO; j++)
         {
             tablero[i][j] = '*';
         }
     }
-   
+
     for (int i = 0; i < ANCHO; i++) {
         tablero[6][i] = 'P';
     }
-    
+
     //piezas blancas
     tablero[7][0] = 'T';
     tablero[7][1] = 'H';
@@ -59,7 +62,7 @@ void imprimirTablero() {
     for (int j = 0; j < ANCHO; j++)
         std::cout << tablero[0][j] << " ";
     std::cout << "\n";
-    
+
     std::cout << "7 ";
     for (int j = 0; j < ANCHO; j++)
         std::cout << tablero[1][j] << " ";
@@ -71,149 +74,131 @@ void imprimirTablero() {
             std::cout << tablero[i][j] << " ";
         std::cout << "\n";
     }
-   
+
     std::cout << "2 ";
     for (int j = 0; j < ANCHO; j++)
         std::cout << tablero[6][j] << " ";
     std::cout << "\n";
-    
+
     std::cout << "1 ";
     for (int j = 0; j < ANCHO; j++)
         std::cout << tablero[7][j] << " ";
     std::cout << "\n";
 }
 
-//movimientos de cada pieza
-void movimientoPieza(char pieza, int columna, int fila) {
-    //un case para cada tipo de pieza separar MAYS y min
-    //cada pieza a de tener matar, movimiento y limites
+//Optimizar el hecho de escoger la posicion donde queremos mover la ficha o la seleccion de ficha
+void escogerPosicion() {
+    std::cout << "Fila: ";
+    std::cout << "\n";
+    std::cin >> fila;
+    std::cout << "Columna: ";
+    std::cin >> columna;
+    fila = ALTO - fila;
+    columna--;
+}
+
+//Movimientos de las piezas
+void movimientos() {
+    //Mediante la pieza se escoge que moviemiento utilizar
     switch (pieza)
     {
-        //movimiento de peon negro
+        //PEONES
     case 'p':
-        
-        if (fila + 1 < ALTO && tablero[fila + 1][columna] == '*') {
-            //si es el primer movimiento
-            if (fila == 1)
-            {
-                int opcion;
-                std::cout << "Quieres mover una casilla o dos? ";
-                std::cin >> opcion;
-                //mover una posicion
-                if (opcion == 1)
-                {
-                    tablero[fila][columna] = '*';
-                    tablero[fila + 1][columna] = 'p';
-                }
-                //mover dos posiciones
-                else if (opcion == 2)
-                {
-                    tablero[fila][columna] = '*';
-                    tablero[fila + 2][columna] = 'p';
-                }
-            }
-            else
-            {
-                tablero[fila][columna] = '*';
-                tablero[fila + 1][columna] = 'p';
-            }
-        }
-        //sistema de diagonal para matar (falta)
-        else if(fila + 1 < ALTO && tablero[fila + 1][columna + 1] >= 'A' && fila + 1 < ALTO && tablero[fila + 1][columna + 1] <= 'Z')
+        if (fila == ALTO - fila)
         {
+            if (tablero[fila][columna] == posicionDispo[fila - 2][columna] && tablero[fila][columna] == posicionDispo[fila - 1][columna])
+            {
 
+            }
         }
         break;
-
-        //movimeitno peon blanco
     case 'P':
-        //mira si la de delante no hay nadie que se mueva
-        if (fila - 1 < ALTO && tablero[fila - 1][columna] == '*') {
-            //si es el primer movimiento
-            if (fila == 6)
-            {
-                int opcion;
-                std::cout << "Quieres mover una casilla o dos? ";
-                std::cin >> opcion;
-                //mover una posicion
-                if (opcion == 1)
-                {
-                    tablero[fila][columna] = '*';
-                    tablero[fila - 1][columna] = 'P';
-                }
-                //mover dos posiciones
-                else if (opcion == 2)
-                {
-                    tablero[fila][columna] = '*';
-                    tablero[fila - 2][columna] = 'P';
-                }
-            }
-            else
-            {
-                tablero[fila][columna] = '*';
-                tablero[fila - 1][columna] = 'P';
-            }
-        }
+        break;
+
+        //TORRES
+    case 't':
+        break;
+    case 'T':
+        break;
+
+        //CABALLOS
+    case 'c':
+        break;
+    case 'C':
+        break;
+
+        //ALFILES
+    case 'a':
+        break;
+    case 'A':
+        break;
+
+        //REINAS
+    case 'q':
+        break;
+    case 'Q':
+
+        //REYES 
+        break;
+    case 'r':
+        break;
+    case 'R':
         break;
 
     default:
         break;
     }
+
 }
 
-//turnos del juego si es false es jugador 1
-void turnoJugador() {
-    int columna, fila;
-    char pieza;
-
-    std::cout << "Dime la columna que esta la pieza: ";
-    std::cin >> columna;
-    std::cout << "Dime la fila en la que esta la pieza: ";
-    std::cin >> fila;
-    
-    //restar 1 para que este de acorde con el array
-    columna--;
-    fila = ALTO - fila;
-
-    //Turno Jugador 1
-    if (!turno)
+//Manera de saber si escoge correctamente la ficha que utilizara en ese movimiento
+void escogerFicha() {
+    if (turno == 1)
     {
-        pieza = tablero[fila][columna];
-        //comprueba si la ficha es suya sino vuelve a tirar
-        if (pieza >= 'A' && pieza <= 'Z') {
-            movimientoPieza(pieza, columna, fila);
-            turno = true;
+        //Si la seleccion no es correcta se forma un bucle hasta que la seleccione correctamente
+        while (!seleccion)
+        {
+            std::cout << "Jugador Blancas escoge la ficha que quieres mover  \n";
+            escogerPosicion();
+            //Comprueba si la ficha es blanca
+            if (tablero[fila][columna] >= 'A' && tablero[fila][columna] <= 'Z')
+            {
+                std::cout << "Seleccion correcta  \n";
+                pieza = tablero[fila][columna];
+                seleccion = true;
+            }
         }
-        else {
-            std::cout << "No es tu pieza. Vuelve a tirar.";
-            turnoJugador();
-        }
-
+        movimientos();
+        seleccion = false;
+        turno++;
     }
-    //turno jugador 2
-    else {
-        pieza = tablero[fila][columna];
-        //comprueba si la ficha es suya sino vuelve a tirar
-        if (pieza >= 'a' && pieza <= 'z') {
-            movimientoPieza(pieza, columna, fila);
-            turno = false;
+    else
+    {
+        //Si la seleccion no es correcta se forma un bucle hasta que la seleccione correctamente
+        while (!seleccion)
+        {
+            std::cout << "Jugador Negras escoge la ficha que quieres mover  \n";
+            escogerPosicion();
+            //Comprueba si la ficha es negra
+            if (tablero[fila][columna] >= 'a' && tablero[fila][columna] <= 'z')
+            {
+                std::cout << "Seleccion correcta  \n";
+                pieza = tablero[fila][columna];
+                seleccion = true;
+            }
         }
-        else {
-            std::cout << "No es tu pieza. Vuelve a tirar.";
-            turnoJugador();
-        }
+        movimientos();
+        seleccion = false;
+        turno--;
     }
-    
 }
 
 int main() {
     inicializarTablero();
-    while (!gameOver)
+    while (!reybMuerto || !reynMuerto)
     {
         imprimirTablero();
-        turnoJugador();
-        
-        //añadir framerate
+        escogerFicha();
         system("cls");
     }
 
