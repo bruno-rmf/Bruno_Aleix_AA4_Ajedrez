@@ -127,6 +127,16 @@ void movimientos() {
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'p';
         }
+        //Muerte en diagonal
+        else if (destinoFila == fila + 1 && (destinoColumna == columna - 1 || destinoColumna == columna + 1) && tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')
+        {
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'p';
+        }
+        else
+        {
+            std::cout << "Movimiento invalido\n";
+        }
         break;
 
 
@@ -142,6 +152,16 @@ void movimientos() {
         {
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'P';
+        }
+        //Muerte en diagonl
+        else if (destinoFila == fila - 1 && (destinoColumna == columna - 1 || destinoColumna == columna + 1) && tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')
+        {
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'P';
+        }
+        else
+        {
+            std::cout << "Movimiento invalido\n";
         }
         break;
 
