@@ -11,7 +11,8 @@ char pieza;
 int fila;
 int columna;
 bool seleccion = false;
-char posicionDispo[ALTO][ANCHO];
+int destinoFila, destinoColumna;
+bool movimentoValido = false;
 //BLANCOS SON MAYUS negros son minusculas
 
 //inicializar el tablero cuando empieza la partida
@@ -89,7 +90,6 @@ void imprimirTablero() {
 //Optimizar el hecho de escoger la posicion donde queremos mover la ficha o la seleccion de ficha
 void escogerPosicion() {
     std::cout << "Fila: ";
-    std::cout << "\n";
     std::cin >> fila;
     std::cout << "Columna: ";
     std::cin >> columna;
@@ -97,22 +97,52 @@ void escogerPosicion() {
     columna--;
 }
 
+void escogerDestino() {
+    std::cout << "Fila: ";
+    std::cin >> destinoFila;
+    std::cout << "Columna: ";
+    std::cin >> destinoColumna;
+    destinoFila = ALTO - destinoFila;
+    destinoColumna--;
+}
+
 //Movimientos de las piezas
 void movimientos() {
+    std::cout << "Escoje el destino \n";
+    escogerDestino();
     //Mediante la pieza se escoge que moviemiento utilizar
     switch (pieza)
     {
         //PEONES
     case 'p':
-        if (fila == ALTO - fila)
+        // Movimiento 1
+        if (destinoFila == fila + 1 && destinoColumna == columna && tablero[destinoFila][destinoColumna] == '*')
         {
-            if (tablero[fila][columna] == posicionDispo[fila - 2][columna] && tablero[fila][columna] == posicionDispo[fila - 1][columna])
-            {
-
-            }
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'p';
+        }
+        //Dos Moviments
+        else if (fila == 1 && destinoFila == fila + 2 && destinoColumna == columna && tablero[fila + 1][columna] == '*' && tablero[destinoFila][destinoColumna] == '*')
+        {
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'p';
         }
         break;
+
+
     case 'P':
+        // Movimiento 1
+        if (destinoFila == fila - 1 && destinoColumna == columna && tablero[destinoFila][destinoColumna] == '*')
+        {
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'P';
+        }
+        // Movimiento 2
+        else if (fila == 6 && destinoFila == fila - 2 && destinoColumna == columna && tablero[fila - 1][columna] == '*' && tablero[destinoFila][destinoColumna] == '*')
+        {
+            tablero[fila][columna] = '*';
+            tablero[destinoFila][destinoColumna] = 'P';
+        }
         break;
 
         //TORRES
@@ -158,7 +188,7 @@ void escogerFicha() {
         //Si la seleccion no es correcta se forma un bucle hasta que la seleccione correctamente
         while (!seleccion)
         {
-            std::cout << "Jugador Blancas escoge la ficha que quieres mover  \n";
+            std::cout << "Jugador BLANCAS escoge la ficha que quieres mover  \n";
             escogerPosicion();
             //Comprueba si la ficha es blanca
             if (tablero[fila][columna] >= 'A' && tablero[fila][columna] <= 'Z')
@@ -177,7 +207,7 @@ void escogerFicha() {
         //Si la seleccion no es correcta se forma un bucle hasta que la seleccione correctamente
         while (!seleccion)
         {
-            std::cout << "Jugador Negras escoge la ficha que quieres mover  \n";
+            std::cout << "Jugador NEGRAS escoge la ficha que quieres mover  \n";
             escogerPosicion();
             //Comprueba si la ficha es negra
             if (tablero[fila][columna] >= 'a' && tablero[fila][columna] <= 'z')
