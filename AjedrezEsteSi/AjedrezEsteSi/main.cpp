@@ -13,6 +13,9 @@ int columna;
 bool seleccion = false;
 int destinoFila, destinoColumna;
 bool movimentoValido = false;
+int reyB;
+int reyN;
+bool caminoLibre = false;
 //BLANCOS SON MAYUS negros son minusculas
 
 //inicializar el tablero cuando empieza la partida
@@ -48,8 +51,8 @@ void inicializarTablero() {
     tablero[7][0] = 'T';
     tablero[7][1] = 'H';
     tablero[7][2] = 'B';
-    tablero[7][3] = 'K';
-    tablero[7][4] = 'Q';
+    tablero[7][3] = 'Q';
+    tablero[7][4] = 'K';
     tablero[7][5] = 'B';
     tablero[7][6] = 'H';
     tablero[7][7] = 'T';
@@ -167,20 +170,24 @@ void movimientos() {
 
         //TORRES
     case 't':
+        if ()
+        {
+
+        }
         break;
     case 'T':
         break;
 
         //CABALLOS
-    case 'c':
+    case 'h':
         break;
-    case 'C':
+    case 'H':
         break;
 
         //ALFILES
-    case 'a':
+    case 'b':
         break;
-    case 'A':
+    case 'B':
         break;
 
         //REINAS
@@ -190,9 +197,9 @@ void movimientos() {
 
         //REYES 
         break;
-    case 'r':
+    case 'k':
         break;
-    case 'R':
+    case 'K':
         break;
 
     default:
@@ -242,14 +249,62 @@ void escogerFicha() {
         turno--;
     }
 }
+//FALTA COMPROBAR SI FUNCIONA CORRECTAMENTE
+void coronar() {
+    for (int i = 0; i < ALTO; i++)
+    {
+        if (tablero[0][i] == 'P')
+        {
+            tablero[0][i] = 'Q';
+        }
+    }
+    for (int i = 0; i < ALTO; i++)
+    {
+        if (tablero[ALTO-1][i] == 'p')
+        {
+            tablero[ALTO-1][i] = 'q';
+        }
+    }
+
+}
+//NO FUNCIONA CORRECTAMENTE HAY QUE HACER COMPROBACIONES Y ARREGLARLO
+// 
+//void comprobarReyes() {
+//    for (int i = 0; i < ALTO; i++)
+//    {
+//        for (int c = 0; c < ALTO; c++)
+//        {
+//            if (tablero[i][c] == 'K')
+//            {
+//                reyB++;
+//            }
+//            else if (tablero[i][c] == 'k')
+//            {
+//                reyN++;
+//            }
+//        }
+//    }
+//    if (reyB == 0)
+//    {
+//        reybMuerto = true;
+//    }
+//    else if (reyN == 0)
+//    {
+//        reynMuerto = true;
+//    }
+//}
 
 int main() {
     inicializarTablero();
     while (!reybMuerto || !reynMuerto)
     {
+        reyB = 0;
+        reyN = 0;
         imprimirTablero();
         escogerFicha();
+        coronar();
         system("cls");
+        //comprobarReyes();
     }
 
     return 0;
