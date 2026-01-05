@@ -305,8 +305,26 @@ void movimientos() {
 
         //ALFILES
     case 'b':
+        // Comprueba que las diagnales sean las mismas y no sean diferentes y esten vacias o de blancas
+        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')))
+        {
+            tablero[destinoFila][destinoColumna] = 'b';
+            tablero[fila][columna] = '*';
+        }
+        else {
+            std::cout << "Movimiento invalido\n";
+        }
         break;
     case 'B':
+        // Comprueba que las diagnales sean las mismas y no sean diferentes y esten vacias o de negras si es asi los mueve. 
+        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')))
+        {
+            tablero[destinoFila][destinoColumna] = 'B';
+            tablero[fila][columna] = '*';
+        }
+        else {
+            std::cout << "Movimiento invalido\n";
+        }
         break;
 
         //REINAS
@@ -317,8 +335,33 @@ void movimientos() {
         //REYES 
         break;
     case 'k':
+        //Se mueve solo a casillas del lado y arrbia y no sed queda en la misma pos.
+        if (destinoFila >= fila - 1 && destinoFila <= fila + 1 && destinoColumna >= columna - 1 && destinoColumna <= columna + 1 && !(destinoFila == fila && destinoColumna == columna))
+        {
+            if (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
+            {
+                tablero[fila][columna] = '*';
+                tablero[destinoFila][destinoColumna] = 'k';
+            }
+        }
+        else {
+            std::cout << "Movimiento invalido\n";
+        }
         break;
+
     case 'K':
+        //Se mueve solo a casillas del lado y arrbia y no sed queda en la misma pos.
+        if (destinoFila >= fila - 1 && destinoFila <= fila + 1 && destinoColumna >= columna - 1 && destinoColumna <= columna + 1 && !(destinoFila == fila && destinoColumna == columna))
+        {
+            if (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+            {
+                tablero[fila][columna] = '*';
+                tablero[destinoFila][destinoColumna] = 'K';
+            }
+        }
+        else {
+            std::cout << "Movimiento invalido\n";
+        }
         break;
 
     default:
