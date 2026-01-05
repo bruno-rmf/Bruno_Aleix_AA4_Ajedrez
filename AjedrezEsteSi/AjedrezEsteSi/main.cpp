@@ -12,10 +12,13 @@ int fila;
 int columna;
 bool seleccion = false;
 int destinoFila, destinoColumna;
-bool movimentoValido = false;
+bool movimientoValido = false;
 int reyB;
 int reyN;
 bool caminoLibre = false;
+int filaCamino;
+int columnaCamino;
+
 //BLANCOS SON MAYUS negros son minusculas
 
 //inicializar el tablero cuando empieza la partida
@@ -170,12 +173,128 @@ void movimientos() {
 
         //TORRES
     case 't':
-        if ()
+        caminoLibre = true;
+        //Comprobar que realiza correctamente el movimiento de la torre(LINEA RECTA)
+        if (destinoFila == fila || destinoColumna == columna)
         {
+            movimientoValido = true;
 
+            //Movimiento Vertical
+            if (destinoColumna == columna)
+            {
+                if (destinoFila>fila)
+                {
+                    filaCamino = 1;
+                }
+                else
+                {
+                    filaCamino = -1;
+                }
+                for (int f = fila + filaCamino; f != destinoFila; f++)
+                {
+                    if (tablero[f][columna] != '*')
+                    {
+                        caminoLibre = false;
+                    }
+                }
+            }
+            //Movimiento Horizontal
+            else
+            {
+                if (destinoColumna > columna)
+                {
+                    columnaCamino = 1;
+                }
+                else
+                {
+                    columnaCamino = -1;
+                }
+                for (int c = columna + columnaCamino; c != destinoColumna; c++)
+                {
+                    if (tablero[c][columna] != '*')
+                    {
+                        caminoLibre = false;
+                    }
+                }
+            }
+            //Si el camino esta libre...
+            if (caminoLibre)
+            {
+                // Comprobamos que el destino NO sea una pieza NEGRA
+                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')) {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 't';
+                }
+                else
+                {
+                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
+                }
+            }
+            else
+            {
+                std::cout << "El camino que intenta recorrer la torre esta obstruido \n";
+            }
         }
+        else
+        {
+            std::cout << "Movimiento invalido la torre se mueve en linea recta";
+        }
+
         break;
     case 'T':
+        caminoLibre = true;
+        //Comprobar que realiza correctamente el movimiento de la torre(LINEA RECTA)
+        if (destinoFila == fila || destinoColumna == columna)
+        {
+            movimientoValido = true;
+
+            // Movimiento Vertical
+            if (destinoColumna == columna)
+            {
+                filaCamino = (destinoFila > fila) ? 1 : -1;
+                for (int f = fila + filaCamino; f != destinoFila; f += filaCamino)
+                {
+                    if (tablero[f][columna] != '*')
+                    {
+                        caminoLibre = false;
+                    }
+                }
+            }
+            // Movimiento Horizontal
+            else
+            {
+                columnaCamino = (destinoColumna > columna) ? 1 : -1;
+                for (int c = columna + columnaCamino; c != destinoColumna; c += columnaCamino)
+                {
+                    if (tablero[fila][c] != '*')
+                    {
+                        caminoLibre = false;
+                    }
+                }
+            }
+
+            // Si el camino está libre...
+            if (caminoLibre)
+            {
+                // Comprobamos que el destino NO sea una pieza BLANCA
+                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')) {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'T'; // Colocamos la Torre Blanca
+                }
+                else
+                {
+                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
+                }
+            }
+            else
+            {
+                std::cout << "El camino que intenta recorrer la torre esta obstruido \n";
+            }
+        }
+        else
+        {
+            std::cout << "Movimiento invalido: la torre se mueve en linea recta\n";
+        }
         break;
 
         //CABALLOS
