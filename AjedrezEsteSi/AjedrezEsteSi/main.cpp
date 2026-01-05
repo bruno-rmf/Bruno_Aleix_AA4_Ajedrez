@@ -288,12 +288,12 @@ void movimientos() {
             }
             else
             {
-                std::cout << "El camino que intenta recorrer la torre esta obstruido \n";
+                std::cout << "El camino que intenta recorrer la TORRE esta obstruido \n";
             }
         }
         else
         {
-            std::cout << "Movimiento invalido: la torre se mueve en linea recta\n";
+            std::cout << "Movimiento invalido: la TORRE se mueve en linea recta \n";
         }
         break;
 
@@ -317,7 +317,7 @@ void movimientos() {
         break;
     case 'B':
         // Comprueba que las diagnales sean las mismas y no sean diferentes y esten vacias o de negras si es asi los mueve. 
-        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')))
+        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')))
         {
             tablero[destinoFila][destinoColumna] = 'B';
             tablero[fila][columna] = '*';
@@ -329,11 +329,141 @@ void movimientos() {
 
         //REINAS
     case 'q':
+        caminoLibre = true;
+        movimientoValido = false;
+
+        //Direccion de la FILA
+        if (destinoFila > fila) 
+        {
+            filaCamino = 1;
+        }
+        else if (destinoFila < fila) 
+        {
+            filaCamino = -1;
+        }
+        else {
+            filaCamino = 0;
+        }
+
+        //Direccion de la columna
+        if (destinoColumna > columna) 
+        {
+            columnaCamino = 1;
+        }
+        else if (destinoColumna < columna) 
+        {
+            columnaCamino = -1;
+        }
+        else {
+            columnaCamino = 0;
+        }
+
+        //Comprobar si el movimiento es valido
+        bool esDiagonalNegra = (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna));
+        bool esRectoNegra = (destinoFila == fila || destinoColumna == columna);
+
+        //Comprobamos si no hay obstruccion en el camino
+        if (esDiagonalNegra || esRectoNegra) 
+        {
+            int f = fila + filaCamino;
+            int c = columna + columnaCamino;
+
+            //Miramos casilla a casilla si hay alguna obstruccion
+            while (f != destinoFila || c != destinoColumna) {
+                if (tablero[f][c] != '*') {
+                    caminoLibre = false;
+                }
+                f = f + filaCamino;
+                c = c + columnaCamino;
+            }
+
+            if (caminoLibre) {
+                // Comprobamos que el destino NO sea una pieza NEGRA
+                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')) {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'q';
+                }
+                else {
+                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
+                }
+            }
+            else {
+                std::cout << "El camino que intenta recorrer la REINA esta obstruido \n";
+            }
+        }
+        else {
+            std::cout << "Movimiento invalido: la REINA se mueve en linea recta \n";
+        }
         break;
     case 'Q':
+        caminoLibre = true;
+        movimientoValido = false;
+
+        //Direccion de la FILA
+        if (destinoFila > fila)
+        {
+            filaCamino = 1;
+        }
+        else if (destinoFila < fila)
+        {
+            filaCamino = -1;
+        }
+        else {
+            filaCamino = 0;
+        }
+
+        //Direccion de la columna
+        if (destinoColumna > columna)
+        {
+            columnaCamino = 1;
+        }
+        else if (destinoColumna < columna)
+        {
+            columnaCamino = -1;
+        }
+        else {
+            columnaCamino = 0;
+        }
+
+        //Comprobar si el movimiento es valido (Recto o Diagonal)
+        bool esDiagonalBlanca = (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna));
+        bool esRectoBlanca = (destinoFila == fila || destinoColumna == columna);
+
+        //Comprobamos si no hay obstruccion en el camino
+        if (esDiagonalBlanca || esRectoBlanca)
+        {
+            int f = fila + filaCamino;
+            int c = columna + columnaCamino;
+
+            //Miramos casilla a casilla si hay alguna obstruccion
+            while (f != destinoFila || c != destinoColumna) {
+                if (tablero[f][c] != '*') {
+                    caminoLibre = false;
+                }
+                f = f + filaCamino;
+                c = c + columnaCamino;
+            }
+
+            if (caminoLibre) {
+                // Comprobamos que el destino NO sea una pieza BLANCA (Mayúsculas)
+                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')) {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'Q';
+                }
+                else {
+                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
+                }
+            }
+            else {
+                std::cout << "El camino que intenta recorrer la REINA esta obstruido \n";
+            }
+        }
+        else {
+            std::cout << "Movimiento invalido: la REINA se mueve en linea recta o diagonal \n";
+        }
+        break;
 
         //REYES 
-        break;
     case 'k':
         //Se mueve solo a casillas del lado y arrbia y no sed queda en la misma pos.
         if (destinoFila >= fila - 1 && destinoFila <= fila + 1 && destinoColumna >= columna - 1 && destinoColumna <= columna + 1 && !(destinoFila == fila && destinoColumna == columna))
