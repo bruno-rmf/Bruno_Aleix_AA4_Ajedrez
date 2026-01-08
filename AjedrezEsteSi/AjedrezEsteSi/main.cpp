@@ -18,6 +18,10 @@ int reyN;
 bool caminoLibre = false;
 int filaCamino;
 int columnaCamino;
+bool esDiagonalNegra = false;
+bool esDiagonalBlanca = false;
+bool esRectoNegra = false;
+bool esRectoBlanca = false;
 
 //BLANCOS SON MAYUS negros son minusculas
 
@@ -358,10 +362,25 @@ void movimientos() {
             columnaCamino = 0;
         }
 
-        //Comprobar si el movimiento es valido
-        bool esDiagonalNegra = (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna));
-        bool esRectoNegra = (destinoFila == fila || destinoColumna == columna);
+        //Comprobar si el movimiento es valido (recto o diagonal)
+        if (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna))
+        {
+            esDiagonalNegra = true;
+        }
+        else
+        {
+            esDiagonalNegra = false;
 
+        }
+
+        if (destinoFila == fila || destinoColumna == columna)
+        {
+            esRectoNegra = true;
+        }
+        else
+        {
+            false;
+        }
         //Comprobamos si no hay obstruccion en el camino
         if (esDiagonalNegra || esRectoNegra) 
         {
@@ -426,8 +445,24 @@ void movimientos() {
         }
 
         //Comprobar si el movimiento es valido (Recto o Diagonal)
-        bool esDiagonalBlanca = (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna));
-        bool esRectoBlanca = (destinoFila == fila || destinoColumna == columna);
+        if (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna))
+        {
+            esDiagonalBlanca = true;
+        }
+        else
+        {
+            esDiagonalBlanca = false;
+
+        }
+
+        if (destinoFila == fila || destinoColumna == columna)
+        {
+            esRectoBlanca = true;
+        }
+        else
+        {
+            esRectoBlanca = false;
+        }
 
         //Comprobamos si no hay obstruccion en el camino
         if (esDiagonalBlanca || esRectoBlanca)
