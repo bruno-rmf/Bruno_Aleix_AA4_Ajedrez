@@ -6,22 +6,15 @@ char tablero[ALTO][ANCHO];
 bool reybMuerto = false;
 bool reynMuerto = false;
 int turno = 1;
-int casillaMovimiento;
 char pieza;
 int fila;
 int columna;
 bool seleccion = false;
-int destinoFila, destinoColumna;
-bool movimientoValido = false;
-int reyB;
-int reyN;
+int destinoFila;
+int destinoColumna;
 bool caminoLibre = false;
 int filaCamino;
 int columnaCamino;
-bool esDiagonalNegra = false;
-bool esDiagonalBlanca = false;
-bool esRectoNegra = false;
-bool esRectoBlanca = false;
 bool jaqueBlanco = false;
 bool jaqueNegro = false;
 
@@ -118,488 +111,394 @@ void escogerDestino() {
     destinoColumna--;
 }
 
-//Movimientos de las piezas
-void movimientos() {
+//Movimientos de las piezas 
+void movimientos()
+{
     std::cout << "Escoje el destino \n";
     escogerDestino();
-    //Mediante la pieza se escoge que moviemiento utilizar
+    caminoLibre = true;
+
     switch (pieza)
     {
         //PEONES
     case 'p':
-        // Movimiento 1
+        //Peón NEGRO
         if (destinoFila == fila + 1 && destinoColumna == columna && tablero[destinoFila][destinoColumna] == '*')
         {
+            //Movimiento normal de 1 casilla hacia adelante si está vacío
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'p';
         }
-        //Dos Moviments
         else if (fila == 1 && destinoFila == fila + 2 && destinoColumna == columna && tablero[fila + 1][columna] == '*' && tablero[destinoFila][destinoColumna] == '*')
         {
+            //Movimiento inicial de 2 casillas
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'p';
         }
-        //Muerte en diagonal
         else if (destinoFila == fila + 1 && (destinoColumna == columna - 1 || destinoColumna == columna + 1) && tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')
         {
+            //Captura en diagonal: debe haber una pieza BLANCA (A-Z)
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'p';
         }
         else
         {
-            std::cout << "Movimiento invalido\n";
+            std::cout << "Movimiento invalido para el peon negro \n";
+            movimientos();
         }
         break;
 
-
     case 'P':
-        // Movimiento 1
+        //Peón BLANCO
         if (destinoFila == fila - 1 && destinoColumna == columna && tablero[destinoFila][destinoColumna] == '*')
         {
+            //Adelante 1 casilla
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'P';
         }
-        // Movimiento 2
         else if (fila == 6 && destinoFila == fila - 2 && destinoColumna == columna && tablero[fila - 1][columna] == '*' && tablero[destinoFila][destinoColumna] == '*')
         {
+            //Adelante 2 casillas
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'P';
         }
-        //Muerte en diagonl
         else if (destinoFila == fila - 1 && (destinoColumna == columna - 1 || destinoColumna == columna + 1) && tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')
         {
+            //Captura en diagonal: debe haber una pieza NEGRA (a-z)
             tablero[fila][columna] = '*';
             tablero[destinoFila][destinoColumna] = 'P';
         }
         else
         {
-            std::cout << "Movimiento invalido\n";
+            std::cout << "Movimiento invalido para el peon blanco \n";
+            movimientos();
         }
         break;
 
         //TORRES
-    case 't':
-        caminoLibre = true;
-        //Comprobar que realiza correctamente el movimiento de la torre(LINEA RECTA)
+    case 't': case 'T':
+        //La torre solo se mueve si la fila es igual o la columna es igual (línea recta)
         if (destinoFila == fila || destinoColumna == columna)
         {
-            movimientoValido = true;
+            // Determinamos hacia dónde avanza
+            if (destinoFila > fila){
+                filaCamino = 1; 
+            }
+            else if (destinoFila < fila){ 
+                filaCamino = -1; 
+            }
+            else 
+            { 
+                filaCamino = 0; 
+            }
 
-            //Movimiento Vertical
-            if (destinoColumna == columna)
+            if (destinoColumna > columna){ 
+                columnaCamino = 1; 
+            }
+            else if (destinoColumna < columna){ 
+                columnaCamino = -1; 
+            }
+            else 
+            { 
+                columnaCamino = 0; 
+            }
+            //Revisa cada casilla hasta el destino
+            for (int f = fila + filaCamino, c = columna + columnaCamino; f != destinoFila || c != destinoColumna; f = f + filaCamino, c = c + columnaCamino)
             {
-                if (destinoFila>fila)
+                //Si encontramos algo que no sea vacío (*), el camino está bloqueado
+                if (tablero[f][c] != '*')
                 {
-                    filaCamino = 1;
+                    caminoLibre = false;
                 }
-                else
+            }
+            if (caminoLibre == true)
+            {
+                //Si el camino está despejado, comprobamos el bando de la pieza
+                if (pieza == 'T')
                 {
-                    filaCamino = -1;
-                }
-                for (int f = fila + filaCamino; f != destinoFila; f++)
-                {
-                    if (tablero[f][columna] != '*')
+                    //La blanca no puede caer sobre otra blanca (A-Z)
+                    if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
                     {
-                        caminoLibre = false;
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 'T';
+                    }
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
+                    }
+                }
+                else if (pieza == 't')
+                {
+                    //La negra no puede caer sobre otra negra (a-z)
+                    if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+                    {
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 't';
+                    }
+
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
                     }
                 }
             }
-            //Movimiento Horizontal
             else
             {
-                if (destinoColumna > columna)
-                {
-                    columnaCamino = 1;
-                }
-                else
-                {
-                    columnaCamino = -1;
-                }
-                for (int c = columna + columnaCamino; c != destinoColumna; c++)
-                {
-                    if (tablero[c][columna] != '*')
-                    {
-                        caminoLibre = false;
-                    }
-                }
-            }
-            //Si el camino esta libre...
-            if (caminoLibre)
-            {
-                // Comprobamos que el destino NO sea una pieza NEGRA
-                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')) {
-                    tablero[fila][columna] = '*';
-                    tablero[destinoFila][destinoColumna] = 't';
-                }
-                else
-                {
-                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
-                }
-            }
-            else
-            {
-                std::cout << "El camino que intenta recorrer la torre esta obstruido \n";
+                std::cout << "El camino de la torre esta obstruido \n";
+                movimientos();
             }
         }
         else
         {
-            std::cout << "Movimiento invalido la torre se mueve en linea recta";
-        }
-
-        break;
-    case 'T':
-        caminoLibre = true;
-        //Comprobar que realiza correctamente el movimiento de la torre(LINEA RECTA)
-        if (destinoFila == fila || destinoColumna == columna)
-        {
-            movimientoValido = true;
-
-            // Movimiento Vertical
-            if (destinoColumna == columna)
-            {
-                filaCamino = (destinoFila > fila) ? 1 : -1;
-                for (int f = fila + filaCamino; f != destinoFila; f += filaCamino)
-                {
-                    if (tablero[f][columna] != '*')
-                    {
-                        caminoLibre = false;
-                    }
-                }
-            }
-            // Movimiento Horizontal
-            else
-            {
-                columnaCamino = (destinoColumna > columna) ? 1 : -1;
-                for (int c = columna + columnaCamino; c != destinoColumna; c += columnaCamino)
-                {
-                    if (tablero[fila][c] != '*')
-                    {
-                        caminoLibre = false;
-                    }
-                }
-            }
-
-            // Si el camino está libre...
-            if (caminoLibre)
-            {
-                // Comprobamos que el destino NO sea una pieza BLANCA
-                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')) {
-                    tablero[fila][columna] = '*';
-                    tablero[destinoFila][destinoColumna] = 'T'; // Colocamos la Torre Blanca
-                }
-                else
-                {
-                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
-                }
-            }
-            else
-            {
-                std::cout << "El camino que intenta recorrer la TORRE esta obstruido \n";
-            }
-        }
-        else
-        {
-            std::cout << "Movimiento invalido: la TORRE se mueve en linea recta \n";
+            std::cout << "La torre solo se mueve en linea recta \n";
+            movimientos();
         }
         break;
-
         //CABALLOS
-    case 'h':
-
+    case 'h': case 'H':
+        //Calculamos la distancia recorrida
         filaCamino = destinoFila - fila;
+        if (filaCamino < 0) 
+        { 
+            filaCamino = -filaCamino; 
+        }
         columnaCamino = destinoColumna - columna;
-
-        //Convertir a positivo si es negativo para medir la distancia
-        if (filaCamino < 0)
-        {
-            filaCamino = -filaCamino;
-        }
         if (columnaCamino < 0)
-        {
-            columnaCamino = -columnaCamino;
+        { 
+            columnaCamino = -columnaCamino; 
         }
-
-        //Validar el movimiento del caballo (L)
+        //El caballo se mueve en "L"
         if ((filaCamino == 2 && columnaCamino == 1) || (filaCamino == 1 && columnaCamino == 2))
         {
-            // Comprobar que el destino NO sea una pieza NEGRA
-            if (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')
+            if (pieza == 'H')
             {
-                std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas  \n";
+                // Comprobar que el destino no sea BLANCA
+                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'H';
+                }
+                else
+                {
+                    std::cout << "No puedes capturar tu propia ficha \n";
+                    movimientos();
+                }
             }
-            else
+            else if (pieza == 'h')
             {
-                tablero[fila][columna] = '*';
-                tablero[destinoFila][destinoColumna] = 'h';
+                //Comprobar que el destino no sea NEGRA
+                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'h';
+                }
+                else
+                {
+                    std::cout << "No puedes capturar tu propia ficha \n";
+                    movimientos();
+                }
             }
         }
         else
         {
-            std::cout << "Movimiento invalido: el CABALLO se mueve en L \n";
-        }
-        break;
-    case 'H':
-        filaCamino = destinoFila - fila;
-        columnaCamino = destinoColumna - columna;
-
-        //Convertir a positivo si es negativo para medir la distancia
-        if (filaCamino < 0)
-        {
-            filaCamino = -filaCamino;
-        }
-        if (columnaCamino < 0)
-        {
-            columnaCamino = -columnaCamino;
-        }
-
-        //Validar el movimiento del caballo (L)
-        if ((filaCamino == 2 && columnaCamino == 1) || (filaCamino == 1 && columnaCamino == 2))
-        {
-            // Comprobar que el destino NO sea una pieza BLANCA
-            if (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')
-            {
-                std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas  \n";
-            }
-            else
-            {
-                tablero[fila][columna] = '*';
-                tablero[destinoFila][destinoColumna] = 'H';
-            }
-        }
-        else
-        {
-            std::cout << "Movimiento invalido: el CABALLO se mueve en L \n";
+            std::cout << "El caballo debe moverse en L \n";
+            movimientos();
         }
         break;
 
         //ALFILES
-    case 'b':
-        // Comprueba que las diagnales sean las mismas y no sean diferentes y esten vacias o de blancas
-        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')))
+    case 'b': case 'B':
+        //Validamos diagonal: la distancia en filas debe ser igual a la de columnas
+        filaCamino = destinoFila - fila;
+        if (filaCamino < 0) { filaCamino = -filaCamino; }
+        columnaCamino = destinoColumna - columna;
+        if (columnaCamino < 0) { columnaCamino = -columnaCamino; }
+
+        if (filaCamino == columnaCamino)
         {
-            tablero[destinoFila][destinoColumna] = 'b';
-            tablero[fila][columna] = '*';
+            //Determinamos si el alfil va hacia arriba, abajo, izquierda o derecha
+            int fDir = (destinoFila > fila) ? 1 : -1;
+            int cDir = (destinoColumna > columna) ? 1 : -1;
+
+            //Revisamos cada casilla de la diagonal para comprobar si hay obstaculos
+            for (int f = fila + fDir, c = columna + cDir; f != destinoFila; f = f + fDir, c = c + cDir)
+            {
+                if (tablero[f][c] != '*')
+                {
+                    caminoLibre = false;
+                }
+            }
+
+            if (caminoLibre == true)
+            {
+                if (pieza == 'B')
+                {
+                    if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
+                    {
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 'B';
+                    }
+
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
+                    }
+                }
+
+                else if (pieza == 'b')
+                {
+                    if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+                    {
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 'b';
+                    }
+
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
+                    }
+                }
+            }
+
+            else
+            {
+                std::cout << "El camino del alfil esta obstruido \n";
+                movimientos();
+            }
         }
-        else {
-            std::cout << "Movimiento invalido\n";
-        }
-        break;
-    case 'B':
-        // Comprueba que las diagnales sean las mismas y no sean diferentes y esten vacias o de negras si es asi los mueve. 
-        if ((destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna)) && (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')))
+
+        else
         {
-            tablero[destinoFila][destinoColumna] = 'B';
-            tablero[fila][columna] = '*';
-        }
-        else {
-            std::cout << "Movimiento invalido\n";
+            std::cout << "El alfil solo se mueve en diagonal \n";
+            movimientos();
         }
         break;
 
         //REINAS
-    case 'q':
-        caminoLibre = true;
-        movimientoValido = false;
-
-        //Direccion de la FILA
-        if (destinoFila > fila) 
-        {
-            filaCamino = 1;
+    case 'q': case 'Q':
+        // La reina combina el movimiento de la torre y el alfil
+        filaCamino = destinoFila - fila;
+        if (filaCamino < 0)
+        { 
+            filaCamino = -filaCamino; 
         }
-        else if (destinoFila < fila) 
-        {
-            filaCamino = -1;
-        }
-        else {
-            filaCamino = 0;
+        columnaCamino = destinoColumna - columna;
+        if (columnaCamino < 0)
+        { 
+            columnaCamino = -columnaCamino; 
         }
 
-        //Direccion de la columna
-        if (destinoColumna > columna) 
+        if (destinoFila == fila || destinoColumna == columna || filaCamino == columnaCamino)
         {
-            columnaCamino = 1;
-        }
-        else if (destinoColumna < columna) 
-        {
-            columnaCamino = -1;
-        }
-        else {
-            columnaCamino = 0;
-        }
+         
+            int fStep = (destinoFila > fila) ? 1 : (destinoFila < fila ? -1 : 0);
+            int cStep = (destinoColumna > columna) ? 1 : (destinoColumna < columna ? -1 : 0);
 
-        //Comprobar si el movimiento es valido (recto o diagonal)
-        if (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna))
-        {
-            esDiagonalNegra = true;
-        }
-        else
-        {
-            esDiagonalNegra = false;
-
-        }
-
-        if (destinoFila == fila || destinoColumna == columna)
-        {
-            esRectoNegra = true;
-        }
-        else
-        {
-            false;
-        }
-        //Comprobamos si no hay obstruccion en el camino
-        if (esDiagonalNegra || esRectoNegra) 
-        {
-            int f = fila + filaCamino;
-            int c = columna + columnaCamino;
-
-            //Miramos casilla a casilla si hay alguna obstruccion
-            while (f != destinoFila || c != destinoColumna) {
-                if (tablero[f][c] != '*') {
+            //Recorremos el camino para ver si hay algun obstaculo
+            for (int f = fila + fStep, c = columna + cStep; f != destinoFila || c != destinoColumna; f = f + fStep, c = c + cStep)
+            {
+                if (tablero[f][c] != '*')
+                {
                     caminoLibre = false;
                 }
-                f = f + filaCamino;
-                c = c + columnaCamino;
             }
 
-            if (caminoLibre) {
-                // Comprobamos que el destino NO sea una pieza NEGRA
-                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')) {
-                    tablero[fila][columna] = '*';
-                    tablero[destinoFila][destinoColumna] = 'q';
+            if (caminoLibre == true)
+            {
+                if (pieza == 'Q')
+                {
+                    if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
+                    {
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 'Q';
+                    }
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
+                    }
                 }
-                else {
-                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
+                else if (pieza == 'q')
+                {
+                    if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+                    {
+                        tablero[fila][columna] = '*';
+                        tablero[destinoFila][destinoColumna] = 'q';
+                    }
+                    else
+                    {
+                        std::cout << "No puedes mover encima de tus propias fichas \n";
+                        movimientos();
+                    }
                 }
             }
-            else {
-                std::cout << "El camino que intenta recorrer la REINA esta obstruido \n";
+            else
+            {
+                std::cout << "El camino de la reina esta obstruido \n";
+                movimientos();
             }
-        }
-        else {
-            std::cout << "Movimiento invalido: la REINA se mueve en linea recta \n";
-        }
-        break;
-    case 'Q':
-        caminoLibre = true;
-        movimientoValido = false;
-
-        //Direccion de la FILA
-        if (destinoFila > fila)
-        {
-            filaCamino = 1;
-        }
-        else if (destinoFila < fila)
-        {
-            filaCamino = -1;
-        }
-        else {
-            filaCamino = 0;
-        }
-
-        //Direccion de la columna
-        if (destinoColumna > columna)
-        {
-            columnaCamino = 1;
-        }
-        else if (destinoColumna < columna)
-        {
-            columnaCamino = -1;
-        }
-        else {
-            columnaCamino = 0;
-        }
-
-        //Comprobar si el movimiento es valido (Recto o Diagonal)
-        if (destinoFila - fila == destinoColumna - columna || destinoFila - fila == -(destinoColumna - columna))
-        {
-            esDiagonalBlanca = true;
         }
         else
         {
-            esDiagonalBlanca = false;
-
+            std::cout << "Movimiento de reina no permitido \n";
+            movimientos();
         }
+        break;
 
-        if (destinoFila == fila || destinoColumna == columna)
+        //REYES
+    case 'k': case 'K':
+        //El rey puede moverse a cualquier casilla (distancia máxima 1)
+        filaCamino = destinoFila - fila;
+        if (filaCamino < 0) { filaCamino = -filaCamino; }
+
+        columnaCamino = destinoColumna - columna;
+        if (columnaCamino < 0) { columnaCamino = -columnaCamino; }
+
+        //Validamos que no se mueva más de 1 casilla
+        if (filaCamino <= 1 && columnaCamino <= 1 && !(destinoFila == fila && destinoColumna == columna))
         {
-            esRectoBlanca = true;
+            if (pieza == 'K')
+            {
+                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'K';
+                }
+                else
+                {
+                    std::cout << "No puedes mover encima de tus propias fichas \n";
+                    movimientos();
+                }
+            }
+            else if (pieza == 'k')
+            {
+                if (!(tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
+                {
+                    tablero[fila][columna] = '*';
+                    tablero[destinoFila][destinoColumna] = 'k';
+                }
+                else
+                {
+                    std::cout << "No puedes mover encima de tus propias fichas \n";
+                    movimientos();
+                }
+            }
         }
         else
         {
-            esRectoBlanca = false;
-        }
-
-        //Comprobamos si no hay obstruccion en el camino
-        if (esDiagonalBlanca || esRectoBlanca)
-        {
-            int f = fila + filaCamino;
-            int c = columna + columnaCamino;
-
-            //Miramos casilla a casilla si hay alguna obstruccion
-            while (f != destinoFila || c != destinoColumna) {
-                if (tablero[f][c] != '*') {
-                    caminoLibre = false;
-                }
-                f = f + filaCamino;
-                c = c + columnaCamino;
-            }
-
-            if (caminoLibre) {
-                // Comprobamos que el destino NO sea una pieza BLANCA (Mayúsculas)
-                if (!(tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')) {
-                    tablero[fila][columna] = '*';
-                    tablero[destinoFila][destinoColumna] = 'Q';
-                }
-                else {
-                    std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas \n";
-                }
-            }
-            else {
-                std::cout << "El camino que intenta recorrer la REINA esta obstruido \n";
-            }
-        }
-        else {
-            std::cout << "Movimiento invalido: la REINA se mueve en linea recta o diagonal \n";
+            std::cout << "El rey solo se mueve una casilla en cualquier direccion \n";
+            movimientos();
         }
         break;
-
-        //REYES 
-    case 'k':
-        //Se mueve solo a casillas del lado y arrbia y no sed queda en la misma pos.
-        if (destinoFila >= fila - 1 && destinoFila <= fila + 1 && destinoColumna >= columna - 1 && destinoColumna <= columna + 1 && !(destinoFila == fila && destinoColumna == columna))
-        {
-            if (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z'))
-            {
-                tablero[fila][columna] = '*';
-                tablero[destinoFila][destinoColumna] = 'k';
-            }
-        }
-        else {
-            std::cout << "Movimiento invalido\n";
-        }
-        break;
-
-    case 'K':
-        //Se mueve solo a casillas del lado y arrbia y no sed queda en la misma pos.
-        if (destinoFila >= fila - 1 && destinoFila <= fila + 1 && destinoColumna >= columna - 1 && destinoColumna <= columna + 1 && !(destinoFila == fila && destinoColumna == columna))
-        {
-            if (tablero[destinoFila][destinoColumna] == '*' || (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z'))
-            {
-                tablero[fila][columna] = '*';
-                tablero[destinoFila][destinoColumna] = 'K';
-            }
-        }
-        else {
-            std::cout << "Movimiento invalido\n";
-        }
-        break;
-
     default:
         break;
     }
-
 }
-
+       
 //Manera de saber si escoge correctamente la ficha que utilizara en ese movimiento
 void escogerFicha() {
     if (turno == 1)
@@ -745,28 +644,28 @@ void jaque()
                 // CABALLOS negros
                 if (i + 2 < ALTO && j + 1 < ANCHO)
                 {
-                    if (tablero[i + 2][j + 1] == 'n')
+                    if (tablero[i + 2][j + 1] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i + 2 < ALTO && j - 1 >= 0)
                 {
-                    if (tablero[i + 2][j - 1] == 'n')
+                    if (tablero[i + 2][j - 1] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i - 2 >= 0 && j + 1 < ANCHO)
                 {
-                    if (tablero[i - 2][j + 1] == 'n')
+                    if (tablero[i - 2][j + 1] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i - 2 >= 0 && j - 1 >= 0)
                 {
-                    if (tablero[i - 2][j - 1] == 'n')
+                    if (tablero[i - 2][j - 1] == 'h')
                     {
                         jaqueBlanco = true;
                     }
@@ -774,28 +673,28 @@ void jaque()
 
                 if (i + 1 < ALTO && j + 2 < ANCHO)
                 {
-                    if (tablero[i + 1][j + 2] == 'n')
+                    if (tablero[i + 1][j + 2] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i + 1 < ALTO && j - 2 >= 0)
                 {
-                    if (tablero[i + 1][j - 2] == 'n')
+                    if (tablero[i + 1][j - 2] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i - 1 >= 0 && j + 2 < ANCHO)
                 {
-                    if (tablero[i - 1][j + 2] == 'n')
+                    if (tablero[i - 1][j + 2] == 'h')
                     {
                         jaqueBlanco = true;
                     }
                 }
                 if (i - 1 >= 0 && j - 2 >= 0)
                 {
-                    if (tablero[i - 1][j - 2] == 'n')
+                    if (tablero[i - 1][j - 2] == 'h')
                     {
                         jaqueBlanco = true;
                     }
@@ -878,28 +777,28 @@ void jaque()
                 // CABALLOS blancos
                 if (i + 2 < ALTO && j + 1 < ANCHO)
                 {
-                    if (tablero[i + 2][j + 1] == 'N')
+                    if (tablero[i + 2][j + 1] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i + 2 < ALTO && j - 1 >= 0)
                 {
-                    if (tablero[i + 2][j - 1] == 'N')
+                    if (tablero[i + 2][j - 1] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i - 2 >= 0 && j + 1 < ANCHO)
                 {
-                    if (tablero[i - 2][j + 1] == 'N')
+                    if (tablero[i - 2][j + 1] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i - 2 >= 0 && j - 1 >= 0)
                 {
-                    if (tablero[i - 2][j - 1] == 'N')
+                    if (tablero[i - 2][j - 1] == 'H')
                     {
                         jaqueNegro = true;
                     }
@@ -907,28 +806,28 @@ void jaque()
 
                 if (i + 1 < ALTO && j + 2 < ANCHO)
                 {
-                    if (tablero[i + 1][j + 2] == 'N')
+                    if (tablero[i + 1][j + 2] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i + 1 < ALTO && j - 2 >= 0)
                 {
-                    if (tablero[i + 1][j - 2] == 'N')
+                    if (tablero[i + 1][j - 2] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i - 1 >= 0 && j + 2 < ANCHO)
                 {
-                    if (tablero[i - 1][j + 2] == 'N')
+                    if (tablero[i - 1][j + 2] == 'H')
                     {
                         jaqueNegro = true;
                     }
                 }
                 if (i - 1 >= 0 && j - 2 >= 0)
                 {
-                    if (tablero[i - 1][j - 2] == 'N')
+                    if (tablero[i - 1][j - 2] == 'H')
                     {
                         jaqueNegro = true;
                     }
@@ -1053,48 +952,16 @@ void jaqueMate()
     }
 }
 
-
-
-//NO FUNCIONA CORRECTAMENTE HAY QUE HACER COMPROBACIONES Y ARREGLARLO
-// 
-//void comprobarReyes() {
-//    for (int i = 0; i < ALTO; i++)
-//    {
-//        for (int c = 0; c < ALTO; c++)
-//        {
-//            if (tablero[i][c] == 'K')
-//            {
-//                reyB++;
-//            }
-//            else if (tablero[i][c] == 'k')
-//            {
-//                reyN++;
-//            }
-//        }
-//    }
-//    if (reyB == 0)
-//    {
-//        reybMuerto = true;
-//    }
-//    else if (reyN == 0)
-//    {
-//        reynMuerto = true;
-//    }
-//}
-
 int main() {
     inicializarTablero();
-    while (!reybMuerto || !reynMuerto)
+    while (!reybMuerto && !reynMuerto)
     {
-        reyB = 0;
-        reyN = 0;
         imprimirTablero();
         escogerFicha();
         coronar();
         jaque();
+        jaqueMate();
         system("cls");
-        //comprobarReyes();
     }
-
     return 0;
 }
