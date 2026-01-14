@@ -669,62 +669,266 @@ void jaque()
     {
         for (int j = 0; j < ANCHO; j++)
         {
-            //buscar el rey blanco y si hay alguna torre o queen hay jaque
+            // Rey blanco
             if (tablero[i][j] == 'K')
             {
-                // Mirar toda la fila
+                // TORRES y REINA mirar las filas
                 for (int c = 0; c < ANCHO; c++)
                 {
-                    if (tablero[i][c] == 'q' || tablero[i][c] == 't')
-                        jaqueBlanco = true;
-                }
-
-                // Mirar toda la columna
-                for (int f = 0; f < ALTO; f++)
-                {
-                    if (tablero[f][j] == 'q' || tablero[f][j] == 't')
-                        jaqueBlanco = true;
-                }
-
-                //mirar las diagonales para el peon
-                if (i - 1 < ALTO)
-                {
-                    if (j + 1 < ANCHO && tablero[i - 1][j + 1] == 'p')
+                    if (tablero[i][c] == 't' || tablero[i][c] == 'q')
                     {
                         jaqueBlanco = true;
                     }
-                    if (j - 1 >= 0 && tablero[i - 1][j - 1] == 'p')
+                }
+
+                // TORRES y REINA mirar las columnas
+                for (int f = 0; f < ALTO; f++)
+                {
+                    if (tablero[f][j] == 't' || tablero[f][j] == 'q')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                // PEONES negros
+                if (i - 1 >= 0)
+                {
+                    if (j + 1 < ANCHO)
+                    {
+                        if (tablero[i - 1][j + 1] == 'p')
+                        {
+                            jaqueBlanco = true;
+                        }
+                    }
+                    if (j - 1 >= 0)
+                    {
+                        if (tablero[i - 1][j - 1] == 'p')
+                        {
+                            jaqueBlanco = true;
+                        }
+                    }
+                }
+
+                // ALFILES y REINA mirar diagonales
+                for (int k = 1; i + k < ALTO && j + k < ANCHO; k++)
+                {
+                    if (tablero[i + k][j + k] == 'a' || tablero[i + k][j + k] == 'q')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                for (int k = 1; i + k < ALTO && j - k >= 0; k++)
+                {
+                    if (tablero[i + k][j - k] == 'a' || tablero[i + k][j - k] == 'q')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                for (int k = 1; i - k >= 0 && j + k < ANCHO; k++)
+                {
+                    if (tablero[i - k][j + k] == 'a' || tablero[i - k][j + k] == 'q')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                for (int k = 1; i - k >= 0 && j - k >= 0; k++)
+                {
+                    if (tablero[i - k][j - k] == 'a' || tablero[i - k][j - k] == 'q')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                // CABALLOS negros
+                if (i + 2 < ALTO && j + 1 < ANCHO)
+                {
+                    if (tablero[i + 2][j + 1] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i + 2 < ALTO && j - 1 >= 0)
+                {
+                    if (tablero[i + 2][j - 1] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i - 2 >= 0 && j + 1 < ANCHO)
+                {
+                    if (tablero[i - 2][j + 1] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i - 2 >= 0 && j - 1 >= 0)
+                {
+                    if (tablero[i - 2][j - 1] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+
+                if (i + 1 < ALTO && j + 2 < ANCHO)
+                {
+                    if (tablero[i + 1][j + 2] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i + 1 < ALTO && j - 2 >= 0)
+                {
+                    if (tablero[i + 1][j - 2] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i - 1 >= 0 && j + 2 < ANCHO)
+                {
+                    if (tablero[i - 1][j + 2] == 'n')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
+                if (i - 1 >= 0 && j - 2 >= 0)
+                {
+                    if (tablero[i - 1][j - 2] == 'n')
                     {
                         jaqueBlanco = true;
                     }
                 }
             }
 
-            //buscar el rey negro y si hay alguna torre o queen hay jaque
+            // Rey negro
             if (tablero[i][j] == 'k')
             {
-                // Mirar toda la fila
+                // TORRES y REINA mirar filas
                 for (int c = 0; c < ANCHO; c++)
                 {
-                    if (tablero[i][c] == 'Q' || tablero[i][c] == 'T')
-                        jaqueNegro = true;
-                }
-
-                // Mirar toda la columna
-                for (int f = 0; f < ALTO; f++)
-                {
-                    if (tablero[f][j] == 'Q' || tablero[f][j] == 'T')
-                        jaqueNegro = true;
-                }
-
-                //mirar las diagonales para el peon
-                if (i + 1 < ALTO) 
-                {
-                    if (j + 1 < ANCHO && tablero[i + 1][j + 1] == 'P') 
+                    if (tablero[i][c] == 'T' || tablero[i][c] == 'Q')
                     {
                         jaqueNegro = true;
                     }
-                    if (j - 1 >= 0 && tablero[i + 1][j - 1] == 'P') 
+                }
+
+                // TORRES y REINA mirar columnas
+                for (int f = 0; f < ALTO; f++)
+                {
+                    if (tablero[f][j] == 'T' || tablero[f][j] == 'Q')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                // PEONES blancos
+                if (i + 1 < ALTO)
+                {
+                    if (j + 1 < ANCHO)
+                    {
+                        if (tablero[i + 1][j + 1] == 'P')
+                        {
+                            jaqueNegro = true;
+                        }
+                    }
+                    if (j - 1 >= 0)
+                    {
+                        if (tablero[i + 1][j - 1] == 'P')
+                        {
+                            jaqueNegro = true;
+                        }
+                    }
+                }
+
+                // ALFILES y REINA mirar diagonales
+                for (int k = 1; i + k < ALTO && j + k < ANCHO; k++)
+                {
+                    if (tablero[i + k][j + k] == 'A' || tablero[i + k][j + k] == 'Q')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                for (int k = 1; i + k < ALTO && j - k >= 0; k++)
+                {
+                    if (tablero[i + k][j - k] == 'A' || tablero[i + k][j - k] == 'Q')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                for (int k = 1; i - k >= 0 && j + k < ANCHO; k++)
+                {
+                    if (tablero[i - k][j + k] == 'A' || tablero[i - k][j + k] == 'Q')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                for (int k = 1; i - k >= 0 && j - k >= 0; k++)
+                {
+                    if (tablero[i - k][j - k] == 'A' || tablero[i - k][j - k] == 'Q')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                // CABALLOS blancos
+                if (i + 2 < ALTO && j + 1 < ANCHO)
+                {
+                    if (tablero[i + 2][j + 1] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i + 2 < ALTO && j - 1 >= 0)
+                {
+                    if (tablero[i + 2][j - 1] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i - 2 >= 0 && j + 1 < ANCHO)
+                {
+                    if (tablero[i - 2][j + 1] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i - 2 >= 0 && j - 1 >= 0)
+                {
+                    if (tablero[i - 2][j - 1] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+
+                if (i + 1 < ALTO && j + 2 < ANCHO)
+                {
+                    if (tablero[i + 1][j + 2] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i + 1 < ALTO && j - 2 >= 0)
+                {
+                    if (tablero[i + 1][j - 2] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i - 1 >= 0 && j + 2 < ANCHO)
+                {
+                    if (tablero[i - 1][j + 2] == 'N')
+                    {
+                        jaqueNegro = true;
+                    }
+                }
+                if (i - 1 >= 0 && j - 2 >= 0)
+                {
+                    if (tablero[i - 1][j - 2] == 'N')
                     {
                         jaqueNegro = true;
                     }
@@ -734,11 +938,121 @@ void jaque()
     }
 
     if (jaqueBlanco)
+    {
         std::cout << "JAQUE al rey BLANCO\n";
+    }
 
     if (jaqueNegro)
+    {
         std::cout << "JAQUE al rey NEGRO\n";
+    }
 }
+
+void jaqueMate()
+{
+    jaque(); // primero detectamos si hay jaque
+
+    char reyes[2] = { 'K', 'k' };
+    bool jaques[2] = { jaqueBlanco, jaqueNegro };
+    std::string nombres[2] = { "BLANCO", "NEGRO" };
+
+    for (int t = 0; t < 2; t++)
+    {
+        if (jaques[t] == true)
+        {
+            for (int i = 0; i < ALTO; i++)
+            {
+                for (int j = 0; j < ANCHO; j++)
+                {
+                    if (tablero[i][j] == reyes[t])
+                    {
+                        bool tieneSalida = false;
+
+                        int nFila, nColumna;
+
+                        nFila = i - 1; nColumna = j - 1;
+                        if (nFila >= 0 && nColumna >= 0)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i - 1; nColumna = j;
+                        if (nFila >= 0)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i - 1; nColumna = j + 1;
+                        if (nFila >= 0 && nColumna < ANCHO)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i; nColumna = j - 1;
+                        if (nFila >= 0)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i; nColumna = j + 1;
+                        if (nFila < ANCHO)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i + 1; nColumna = j - 1;
+                        if (nFila < ALTO && nFila >= 0)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i + 1; nColumna = j;
+                        if (nFila < ALTO)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        nFila = i + 1; nColumna = j + 1;
+                        if (nFila < ALTO && nColumna < ANCHO)
+                        {
+                            if (tablero[nFila][nColumna] == '*')
+                            {
+                                tieneSalida = true;
+                            }
+                        }
+
+                        if (tieneSalida == false)
+                        {
+                            std::cout << "JAQUE MATE al rey " << nombres[t] << "\n";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
 
 //NO FUNCIONA CORRECTAMENTE HAY QUE HACER COMPROBACIONES Y ARREGLARLO
