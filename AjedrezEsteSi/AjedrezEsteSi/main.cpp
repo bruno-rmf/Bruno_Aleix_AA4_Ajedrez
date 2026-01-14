@@ -623,6 +623,19 @@ void jaque()
                     if (tablero[f][j] == 'q' || tablero[f][j] == 't')
                         jaqueBlanco = true;
                 }
+
+                //mirar las diagonales para el peon
+                if (i - 1 < ALTO)
+                {
+                    if (j + 1 < ANCHO && tablero[i - 1][j + 1] == 'p')
+                    {
+                        jaqueBlanco = true;
+                    }
+                    if (j - 1 >= 0 && tablero[i - 1][j - 1] == 'p')
+                    {
+                        jaqueBlanco = true;
+                    }
+                }
             }
 
             //buscar el rey negro y si hay alguna torre o queen hay jaque
@@ -640,6 +653,19 @@ void jaque()
                 {
                     if (tablero[f][j] == 'Q' || tablero[f][j] == 'T')
                         jaqueNegro = true;
+                }
+
+                //mirar las diagonales para el peon
+                if (i + 1 < ALTO) 
+                {
+                    if (j + 1 < ANCHO && tablero[i + 1][j + 1] == 'P') 
+                    {
+                        jaqueNegro = true;
+                    }
+                    if (j - 1 >= 0 && tablero[i + 1][j - 1] == 'P') 
+                    {
+                        jaqueNegro = true;
+                    }
                 }
             }
         }
