@@ -9,7 +9,6 @@ int main() {
         imprimirTablero();
         escogerFicha();
         coronar();
-        jaqueMate();
         system("cls");
     }
     return 0;
