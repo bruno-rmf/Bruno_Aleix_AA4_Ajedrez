@@ -22,6 +22,9 @@ bool esDiagonalNegra = false;
 bool esDiagonalBlanca = false;
 bool esRectoNegra = false;
 bool esRectoBlanca = false;
+bool jaqueBlanco = false;
+bool jaqueNegro = false;
+
 
 //BLANCOS SON MAYUS negros son minusculas
 
@@ -594,6 +597,62 @@ void coronar() {
     }
 
 }
+
+void jaque()
+{
+    jaqueBlanco = false;
+    jaqueNegro = false;
+
+    for (int i = 0; i < ALTO; i++)
+    {
+        for (int j = 0; j < ANCHO; j++)
+        {
+            //buscar el rey blanco y si hay alguna torre o queen hay jaque
+            if (tablero[i][j] == 'K')
+            {
+                // Mirar toda la fila
+                for (int c = 0; c < ANCHO; c++)
+                {
+                    if (tablero[i][c] == 'q' || tablero[i][c] == 't')
+                        jaqueBlanco = true;
+                }
+
+                // Mirar toda la columna
+                for (int f = 0; f < ALTO; f++)
+                {
+                    if (tablero[f][j] == 'q' || tablero[f][j] == 't')
+                        jaqueBlanco = true;
+                }
+            }
+
+            //buscar el rey negro y si hay alguna torre o queen hay jaque
+            if (tablero[i][j] == 'k')
+            {
+                // Mirar toda la fila
+                for (int c = 0; c < ANCHO; c++)
+                {
+                    if (tablero[i][c] == 'Q' || tablero[i][c] == 'T')
+                        jaqueNegro = true;
+                }
+
+                // Mirar toda la columna
+                for (int f = 0; f < ALTO; f++)
+                {
+                    if (tablero[f][j] == 'Q' || tablero[f][j] == 'T')
+                        jaqueNegro = true;
+                }
+            }
+        }
+    }
+
+    if (jaqueBlanco)
+        std::cout << "JAQUE al rey BLANCO\n";
+
+    if (jaqueNegro)
+        std::cout << "JAQUE al rey NEGRO\n";
+}
+
+
 //NO FUNCIONA CORRECTAMENTE HAY QUE HACER COMPROBACIONES Y ARREGLARLO
 // 
 //void comprobarReyes() {
@@ -630,6 +689,7 @@ int main() {
         imprimirTablero();
         escogerFicha();
         coronar();
+        jaque();
         system("cls");
         //comprobarReyes();
     }
