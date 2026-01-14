@@ -21,9 +21,6 @@
     <ClCompile Include="movimientos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="variables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="variables.h">

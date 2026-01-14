@@ -129,7 +129,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movimientos.cpp" />
-    <ClCompile Include="variables.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="movimientos.h" />

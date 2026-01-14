@@ -25,7 +25,6 @@ bool esRectoBlanca = false;
 bool jaqueBlanco = false;
 bool jaqueNegro = false;
 
-
 //BLANCOS SON MAYUS negros son minusculas
 
 //inicializar el tablero cuando empieza la partida
@@ -306,8 +305,71 @@ void movimientos() {
 
         //CABALLOS
     case 'h':
+
+        filaCamino = destinoFila - fila;
+        columnaCamino = destinoColumna - columna;
+
+        //Convertir a positivo si es negativo para medir la distancia
+        if (filaCamino < 0)
+        {
+            filaCamino = -filaCamino;
+        }
+        if (columnaCamino < 0)
+        {
+            columnaCamino = -columnaCamino;
+        }
+
+        //Validar el movimiento del caballo (L)
+        if ((filaCamino == 2 && columnaCamino == 1) || (filaCamino == 1 && columnaCamino == 2))
+        {
+            // Comprobar que el destino NO sea una pieza NEGRA
+            if (tablero[destinoFila][destinoColumna] >= 'a' && tablero[destinoFila][destinoColumna] <= 'z')
+            {
+                std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas  \n";
+            }
+            else
+            {
+                tablero[fila][columna] = '*';
+                tablero[destinoFila][destinoColumna] = 'h';
+            }
+        }
+        else
+        {
+            std::cout << "Movimiento invalido: el CABALLO se mueve en L \n";
+        }
         break;
     case 'H':
+        filaCamino = destinoFila - fila;
+        columnaCamino = destinoColumna - columna;
+
+        //Convertir a positivo si es negativo para medir la distancia
+        if (filaCamino < 0)
+        {
+            filaCamino = -filaCamino;
+        }
+        if (columnaCamino < 0)
+        {
+            columnaCamino = -columnaCamino;
+        }
+
+        //Validar el movimiento del caballo (L)
+        if ((filaCamino == 2 && columnaCamino == 1) || (filaCamino == 1 && columnaCamino == 2))
+        {
+            // Comprobar que el destino NO sea una pieza BLANCA
+            if (tablero[destinoFila][destinoColumna] >= 'A' && tablero[destinoFila][destinoColumna] <= 'Z')
+            {
+                std::cout << "No esta permitido mover tu ficha encima de otra de tus fichas  \n";
+            }
+            else
+            {
+                tablero[fila][columna] = '*';
+                tablero[destinoFila][destinoColumna] = 'H';
+            }
+        }
+        else
+        {
+            std::cout << "Movimiento invalido: el CABALLO se mueve en L \n";
+        }
         break;
 
         //ALFILES
