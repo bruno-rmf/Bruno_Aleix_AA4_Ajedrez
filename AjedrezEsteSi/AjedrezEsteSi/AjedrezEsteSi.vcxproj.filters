@@ -18,15 +18,24 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="movimientos.cpp">
+    <ClCompile Include="jugabilidad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tablero.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="funcionalidades.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="variables.h">
+    <ClInclude Include="jugabilidad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="movimientos.h">
+    <ClInclude Include="tablero.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="funcionalidades.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

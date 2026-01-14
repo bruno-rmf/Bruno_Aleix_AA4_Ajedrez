@@ -127,12 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="funcionalidades.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="movimientos.cpp" />
+    <ClCompile Include="jugabilidad.cpp" />
+    <ClCompile Include="tablero.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="movimientos.h" />
-    <ClInclude Include="variables.h" />
+    <ClInclude Include="funcionalidades.h" />
+    <ClInclude Include="jugabilidad.h" />
+    <ClInclude Include="tablero.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
