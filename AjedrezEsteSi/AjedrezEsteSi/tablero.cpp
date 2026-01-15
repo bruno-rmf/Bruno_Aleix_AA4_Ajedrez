@@ -1,0 +1,72 @@
+#include "tablero.h"
+//inicializar el tablero cuando empieza la partida
+char tablero[ALTO][ANCHO];
+void inicializarTablero() {
+    //piezas negras
+    tablero[0][0] = 't';
+    tablero[0][1] = 'h';
+    tablero[0][2] = 'b';
+    tablero[0][3] = 'k';
+    tablero[0][4] = 'q';
+    tablero[0][5] = 'b';
+    tablero[0][6] = 'h';
+    tablero[0][7] = 't';
+
+    for (int i = 0; i < ANCHO; i++) {
+        tablero[1][i] = 'p';
+    }
+
+    for (int i = 2; i < 6; i++)
+    {
+        for (int j = 0; j < ANCHO; j++)
+        {
+            tablero[i][j] = '*';
+        }
+    }
+
+    for (int i = 0; i < ANCHO; i++) {
+        tablero[6][i] = 'P';
+    }
+
+    //piezas blancas
+    tablero[7][0] = 'T';
+    tablero[7][1] = 'H';
+    tablero[7][2] = 'B';
+    tablero[7][3] = 'Q';
+    tablero[7][4] = 'K';
+    tablero[7][5] = 'B';
+    tablero[7][6] = 'H';
+    tablero[7][7] = 'T';
+}
+
+//imprimir el tablero
+void imprimirTablero() {
+    std::cout << "  1 2 3 4 5 6 7 8\n";
+
+    std::cout << "8 ";
+    for (int j = 0; j < ANCHO; j++)
+        std::cout << tablero[0][j] << " ";
+    std::cout << "\n";
+
+    std::cout << "7 ";
+    for (int j = 0; j < ANCHO; j++)
+        std::cout << tablero[1][j] << " ";
+    std::cout << "\n";
+
+    for (int i = 2; i < 6; i++) {
+        std::cout << 8 - i << " ";
+        for (int j = 0; j < ANCHO; j++)
+            std::cout << tablero[i][j] << " ";
+        std::cout << "\n";
+    }
+
+    std::cout << "2 ";
+    for (int j = 0; j < ANCHO; j++)
+        std::cout << tablero[6][j] << " ";
+    std::cout << "\n";
+
+    std::cout << "1 ";
+    for (int j = 0; j < ANCHO; j++)
+        std::cout << tablero[7][j] << " ";
+    std::cout << "\n";
+}

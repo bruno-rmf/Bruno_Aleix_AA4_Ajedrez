@@ -1,6 +1,4 @@
 #include "jugabilidad.h"
-bool reybMuerto = false;
-bool reynMuerto = false;
 bool caminoLibre = false;
 bool seleccion = false;
 int filaCamino;
@@ -455,31 +453,5 @@ void escogerFicha() {
         movimientos();
         seleccion = false;
         turno--;
-    }
-}
-
-
-void reymuerto() {
-    bool reyBlancoVivo = false;
-    bool reyNegroVivo = false;
-
-    for (int f = 0; f < ALTO; ++f) {
-        for (int c = 0; c < ANCHO; ++c) {
-            if (tablero[f][c] == 'K') {
-                reyBlancoVivo = true;
-            }
-            else if (tablero[f][c] == 'k') {
-                reyNegroVivo = true;
-            }
-        }
-    }
-
-    if (!reyBlancoVivo) {
-        std::cout << "Rey BLANCO muerto. Ganan las NEGRAS.\n";
-        reybMuerto = true;
-    }
-    else if (!reyNegroVivo) {
-        std::cout << "Rey NEGRO muerto. Ganan las BLANCAS.\n";
-        reynMuerto = true;
     }
 }

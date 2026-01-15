@@ -1,6 +1,7 @@
 #include "funcionalidades.h"
 //BLANCOS SON MAYUS negros son minusculas
-
+bool reybMuerto = false;
+bool reynMuerto = false;
 int main() {
     inicializarTablero();
     while (!reybMuerto && !reynMuerto)
@@ -8,7 +9,6 @@ int main() {
         imprimirTablero();
         escogerFicha();
         coronar();
-        reymuerto();
         system("cls");
     }
     return 0;
